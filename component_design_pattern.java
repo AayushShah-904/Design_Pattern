@@ -1,84 +1,115 @@
 import java.util.ArrayList;
+
 // Component
 interface Hotel {
 
     void display();
+    void Order();
+
+    
     
 }
 
-class DineOut implements Hotel{
-    private String order;
-    private ArrayList<Hotel> orderList;
+//composite
+class Gujarati implements Hotel
+{
+    private ArrayList<Hotel> items =new ArrayList<>();
 
-    public DineOut(String order)
+    public void add(Hotel hotel)
     {
-        this.order=order;
-        this.orderList=new ArrayList<>();
-    }
-
-    public void setOrder(String order)
-    {
-        this.order=order;
-    }
-    
-    public ArrayList<Hotel> getOrder()
-    {
-        return orderList;
-    }
-    
-    public void addOrder(Hotel order) {
-        orderList.add(order);
+        items.add(hotel);
     }
 
-    public void removeOrder(Hotel order) {
-        orderList.remove(order);
+    public void remove(Hotel hotel)
+    {
+        items.remove(hotel);
     }
-    public void display() {
-        System.out.println("DineOut Order " +order);
-        for(Hotel arr : orderList)
-        {
-            arr.display();
+
+    public void display()
+    {
+        System.out.println("Gujarati Food is prepared");
+     
+       for (Hotel hotel : items) {
+        hotel.display();
+       }
+     
+    }
+
+    public void Order()
+    {
+        System.out.println("Gujarati order is placed");
+        for (Hotel hotel : items) {
+            hotel.Order();
         }
     }
-    
+
 }
 
-//leaf
-class DineIn implements Hotel {
-    private String order;
-
-    public DineIn(String order)
-    {
-        this.order=order;
-    }
-
-    public void setOrder(String order)
-    {
-        this.order=order;
-    }
-    
-    public String getOrder()
-    {
-        return order;
-    }
-
+class GujBreakfast implements Hotel
+{
     public void display() {
-        System.out.println("DineIn Order " + order);
+        System.out.println("Dholka is being prepared.");
+    }
+
+    public void Order() {
+        System.out.println("Dholka order is placed.");
     }
 }
+
+class GujDinner implements Hotel
+{
+    public void display() {
+        System.out.println("Puran Poli is being prepared.");
+    }
+
+    public void Order() {
+        System.out.println("Puran Poli order is placed.");
+    }
+}
+
+class GujLunch implements Hotel
+{
+    public void display() {
+        System.out.println("Gujarati Thali is being prepared.");
+    }
+
+    public void Order() {
+        System.out.println("Gujarati Thali order is placed.");
+    }
+}
+//leaf
+class Punjabi implements Hotel
+{
+        public void display()
+        {
+            System.out.println("Punjabi Food is beign Prepared");
+            System.out.println("Paratha, Dal Makhani");
+            System.out.println("Lassi, Jalabi");
+
+        }
+
+        public void Order()
+        {
+            System.out.println("Punjabi food is ordered");
+        }
+        
+}   
+
+
 
 public class component_design_pattern {
     public static void main(String[] args) {
-        System.out.println("Welcome to restaturant");
+        Gujarati guj =new Gujarati();
+        guj.add(new GujBreakfast());
+        guj.add(new GujLunch());
+        guj.add(new GujDinner());
+        guj.display();
+        guj.Order();
 
-        DineIn d1=new DineIn("Lassi");
-        DineIn d2=new DineIn("GulabJamu");
-
-        DineOut punj=new DineOut("Punjabi");
-        punj.addOrder(d1);
-        punj.addOrder(d2);
-
-        punj.display();
+        System.out.println(" ");
+        Punjabi pun=new Punjabi();
+        pun.display();
+        pun.Order();
     }
 }
 
