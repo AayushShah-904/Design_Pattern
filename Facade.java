@@ -1,13 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author dsa
- */
-
 interface HotelKeeper {
     void order();
     void drink();
@@ -85,20 +75,45 @@ class RestaurantFacade {
     
 }
 
-public class NewClass {
+public class Facade {
     public static void main(String[] args) {
         RestaurantFacade restaurantFacade = new RestaurantFacade();
+        Scanner sc = new Scanner(System.in);
+        String choice;
 
-        restaurantFacade.placeOrder(new Punjabi()); 
-        restaurantFacade.placeOrder(new Gujarati()); 
-        restaurantFacade.placeOrder(new Chinese()); 
-        
-        restaurantFacade.drinkOrder(new Punjabi()); 
-        restaurantFacade.drinkOrder(new Gujarati()); 
-        restaurantFacade.drinkOrder(new Chinese()); 
-        
-        restaurantFacade.dessertOrder(new Punjabi()); 
-        restaurantFacade.dessertOrder(new Gujarati()); 
-        restaurantFacade.dessertOrder(new Chinese()); 
+        do {
+            System.out.print("Enter cuisine (punjabi, gujarati, chinese) or 'exit' to quit: ");
+            choice = sc.next().toLowerCase();
+
+            switch (choice) {
+                case "punjabi":
+                    restaurantFacade.placeOrder(new Punjabi());
+                    restaurantFacade.drinkOrder(new Punjabi());
+                    restaurantFacade.dessertOrder(new Punjabi());
+                    break;
+
+                case "gujarati":
+                    restaurantFacade.placeOrder(new Gujarati());
+                    restaurantFacade.drinkOrder(new Gujarati());
+                    restaurantFacade.dessertOrder(new Gujarati());
+                    break;
+
+                case "chinese":
+                    restaurantFacade.placeOrder(new Chinese());
+                    restaurantFacade.drinkOrder(new Chinese());
+                    restaurantFacade.dessertOrder(new Chinese());
+                    break;
+
+                case "exit":
+                    System.out.println("Exiting the program.");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (!choice.equals("exit"));
+
+        sc.close();
     }
 }
