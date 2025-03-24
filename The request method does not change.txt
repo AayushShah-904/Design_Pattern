@@ -1,0 +1,1 @@
+The request method does not change the state; it simply executes the behavior of the current state. If you want to transition to a new state, you would call setState before calling request
