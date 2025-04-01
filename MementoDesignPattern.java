@@ -1,127 +1,21 @@
+
 import java.util.ArrayList;
 import java.util.List;
 
-// Originator
+// Originator (Document)
 class Document {
+
     private int bill;
-    private int id=1;
-
-    
-    public void write(int bill) {
-        this.bill = bill;
-    }
-
-    public int getOrderId() {
-
-        return this.id++;
-
-    }
-
-    public int getContent() {
-        return this.bill;
-    }
-
-    public DocumentMemento createMemento() {
-        return new DocumentMemento(this.bill);
-    }
-
-    public void restoreFromMemento(DocumentMemento memento) {
-        this.bill = memento.getSavedbill();
-    }
-}
-
-// Memento
-class DocumentMemento {
-    private int bill;
-
-    public DocumentMemento(int bill) {
-        this.bill = bill;
-    }
-
-    public int getSavedbill() {
-        return this.bill;
-    }
-}
-
-// Caretaker
-class History {
-    private List<DocumentMemento> mementos;
-
-    public History() {
-        this.mementos = new ArrayList<>();
-    }
-
-    public void addMemento(DocumentMemento memento) {
-        this.mementos.add(memento);
-    }
-
-    public DocumentMemento getMemento(int id) {
-        return this.mementos.get(id);
-    }
-}
-
-public class MementoDesignPattern {
-    public static void main(String[] args) {
-        Document document = new Document();
-        History history = new History();
-
-        // Write some content
-        document.write(4567);
-        history.addMemento(document.createMemento());
-        
-        // Write more content
-        document.write(2314);
-        history.addMemento(document.createMemento());
-
-        // Restore to previous state
-        document.restoreFromMemento(history.getMemento(0));
-
-        // Print document content
-        System.out.println("Order ID: " + document.getOrderId() + ", Bill Amount: " + document.getContent());
-
-        // Restore to previous state
-        document.restoreFromMemento(history.getMemento(1));
-        
-        // Print document content
-        System.out.println("Order ID: " + document.getOrderId() + ", Bill Amount: " + document.getContent());
-
-        
-    }
-}
-
-
-
-
-
-
-
-/*import java.util.ArrayList;
-import java.util.List;
-
-// Originator
-class Document {
-    private int bill;
-    private String foodType;
-    private static int idCounter = 1; // Static counter for unique order IDs
-    private int orderId;
-
-    public Document(String foodType) {
-        this.foodType = foodType;
-        this.orderId = idCounter++; // Assign a unique order ID
-    }
 
     public void write(int bill) {
         this.bill = bill;
     }
 
-    public int getOrderId() {
-        return this.orderId;
-    }
-
-    public int getContent() {
+    public int getBillAmount() {
         return this.bill;
     }
 
+    // storing the current bill amount.
     public DocumentMemento createMemento() {
         return new DocumentMemento(this.bill);
     }
@@ -131,10 +25,12 @@ class Document {
     }
 }
 
-// Memento
+// Memento (Captures state)
 class DocumentMemento {
-    private int bill;
 
+    private final int bill;
+
+    //Saves a copy of the bill amount
     public DocumentMemento(int bill) {
         this.bill = bill;
     }
@@ -144,44 +40,70 @@ class DocumentMemento {
     }
 }
 
-// Caretaker
+// Caretaker (History)
 class History {
-    private List<DocumentMemento> mementos;
 
-    public History() {
-        this.mementos = new ArrayList<>();
-    }
+    private final List<Snapshot> snapshots = new ArrayList<>();
+    private int orderId = 1;  // Tracks unique order IDs
+
+    //Stores Each Order ID with Memento
+    public static class Snapshot {
+
+        int orderId;
+        DocumentMemento memento;
+
+        Snapshot(int orderId, DocumentMemento memento) {
+            this.orderId = orderId;
+            this.memento = memento;
+        }
+
+        public int getOrderId() {
+            return orderId;
+        }
+
+        public DocumentMemento getMemento() {
+            return memento;
+        }
+    }   
 
     public void addMemento(DocumentMemento memento) {
-        this.mementos.add(memento);
+        snapshots.add(new Snapshot(orderId++, memento)); //Stores Multiple Copies
     }
 
-    public DocumentMemento getMemento(int index) {
-        if (index < 0 || index >= mementos.size()) {
-            throw new IndexOutOfBoundsException("Invalid memento index");
+    public Snapshot getSnapshot(int index) {
+        if (index < 0 || index >= snapshots.size()) {
+            throw new IndexOutOfBoundsException("Invalid snapshot index: " + index);
         }
-        return this.mementos.get(index);
+        return snapshots.get(index);
     }
 }
 
 public class MementoDesignPattern {
+
     public static void main(String[] args) {
-        Document document = new Document("Punjabi");
+        Document document = new Document();
         History history = new History();
 
-        // Write some content
+        // Save first state
         document.write(4567);
         history.addMemento(document.createMemento());
 
-        // Write more content
+        // Save second state
         document.write(2314);
         history.addMemento(document.createMemento());
 
-        // Restore to previous state
-        document.restoreFromMemento(history.getMemento(0));
+        // restore first state
+        History.Snapshot snapshot1 = history.getSnapshot(1);
+        System.out.println("Order ID: " + snapshot1.getOrderId() + ", Bill Amount: " + document.getBillAmount());
 
-        // Print document content
-        System.out.println("Order ID: " + document.getOrderId() + ", Bill Amount: " + document.getContent());
+        // Restore first saved state
+        History.Snapshot snapshot2 = history.getSnapshot(0);
+        document.restoreFromMemento(snapshot2.getMemento());
+        System.out.println("Restored -> Order ID: " + snapshot2.getOrderId() + ", Bill Amount: " + document.getBillAmount());
+
+        // Restore second saved state
+        History.Snapshot snapshot3 = history.getSnapshot(1);
+        document.restoreFromMemento(snapshot3.getMemento());
+        System.out.println("Restored -> Order ID: " + snapshot3.getOrderId() + ", Bill Amount: " + document.getBillAmount());
     }
 }
-*/
