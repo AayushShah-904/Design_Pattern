@@ -1,0 +1,5 @@
+A subject may have any number
+of dependent observers.
+Allobservers are notified whenever the subject undergoes
+a change in state.In response, each observer will query the subjectto synchronize
+its state with the subject's state.
